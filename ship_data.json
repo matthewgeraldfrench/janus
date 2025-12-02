@@ -1,0 +1,45 @@
+{
+  "ship_name": "Persephone",
+  "owner": "Erebus Corporation",
+  "class": "Resource Harvester",
+  "manufactured_at": "Luna Shipyards",
+  "commissioned_year": 2149,
+  "ai_name": "JANUS",
+
+  "crew": {
+    "maximum_complement": 30,
+    "minimum_operational_crew": 12,
+    "rotation_protocol": {
+      "crews": ["Alpha", "Beta", "Gamma"],
+      "shift_structure": {
+        "active_hours": 8,
+        "rest_hours": 16,
+        "monthly_extended_rest": "2 days"
+      },
+      "off_duty_procedure": "Report to cryostasis or quarters."
+    }
+  },
+
+  "extraction_systems": {
+    "extractor_units": 4,
+    "technology": "Plasma Bore",
+    "description": "High-intensity drilling and ore vaporization.",
+    "resource_targets": ["Nickel", "Ice", "Silicates"]
+  },
+
+  "ship_zones": [
+    {
+      "zone_name": "Command Bridge",
+      "description": "Primary command and navigation center."
+    },
+    {
+      "zone_name": "Main Engineering",
+      "description": "Reactor, generators, and power systems."
+    }
+  ],
+
+  "deckplan": {
+    "Deck 1": ["Command Bridge", "Cryo Wing"],
+    "Deck 2": ["Main Engineering", "Extractor Control"]
+  }
+}

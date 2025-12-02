@@ -7,14 +7,14 @@ import requests
 from gtts import gTTS
 # Ensure the correct module or file is imported
 # Replace 'commands' with the actual file or module name if it's custom
-import world.janus_ship.persephone_commands as persephone_commands  # type: ignore # Update this to the correct module or file name
+import persephone_commands  
 
 # Bot configuration
-DISCORD_BOT_TOKEN = "MTM1MDQ3Mjg5ODk4ODQ3NDUxOQ.GJ8WIt.sxrxzncsh02aTW6rHHWdh2eOfXuGuGp1_lFbtg"  # Replace with your actual bot token
+DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN", "")
 COMMAND_PREFIX = "!"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 TTS_LANGUAGE = "en-gb"
-FFMPEG_PATH = r"C:\ffmpeg-7.1.1-full_build\ffmpeg-7.1.1-full_build\bin\ffmpeg.exe"  # Update this path as needed
+FFMPEG_PATH = r"C:\Users\matth\OneDrive\Desktop\Janus\ffmpeg-2025-12-01-git-7043522fe0-full_build\bin\ffmpeg.exe" # Update this path as needed
 TEMP_AUDIO_PATH = r"C:\Bots\temp_audio.mp3"  # Update this path as needed
 
 # Important: Set this to the same ID as your bot

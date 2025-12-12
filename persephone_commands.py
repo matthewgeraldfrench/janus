@@ -5,6 +5,10 @@ import discord
 from discord.ext import commands
 from difflib import get_close_matches
 
+# IDs for DM control and crew-facing terminal
+ROOT_COMMAND_CHANNEL_ID = 1350826672504700938# replace with your #root-command channel ID
+CREW_TERMINAL_CHANNEL_ID = 1350922295782281297# IDs for DM control and crew-facing terminal
+
 # --- File and Directory Setup ---
 base_dir = os.path.dirname(os.path.abspath(__file__))
 zone_state_path = os.path.join(base_dir, "zone_state.json")
@@ -24,6 +28,66 @@ def save_zone_states():
     """Save the current zone states to the JSON file."""
     with open(zone_state_path, "w") as f:
         json.dump(zone_states, f, indent=4)
+
+erebus_directives = [
+    {
+        "title": "Conduit Performance Verification",
+        "location": "Main Engineering / Maintenance Shafts",
+        "summary": "Minor power fluctuations detected in aging conduits. Verify structural and electrical integrity to prevent future inefficiencies.",
+        "priority": "Low",
+        "compliance": "Documentation of inspection is required for maintenance records."
+    },
+    {
+        "title": "Asset Retrieval — Maintenance Drone",
+        "location": "Drone Hangar & Cargo Access",
+        "summary": "A maintenance drone failed standard check-in procedures. Locate, secure, and return the unit for reformatting.",
+        "priority": "Moderate",
+        "compliance": "Drone hardware is Erebus property and must not be abandoned."
+    },
+    {
+        "title": "Cryostasis Unit Temperature Variance",
+        "location": "Crew Quarters & Cryostasis Wing",
+        "summary": "A cryo-chamber reports a minor but persistent temperature drift. Recalibrate to maintain personnel preservation standards.",
+        "priority": "Elevated",
+        "compliance": "Deviations affecting frozen personnel will be reviewed by Human Resources."
+    },
+    {
+        "title": "Unregistered Material Analysis",
+        "location": "Ore Intake & Analysis Lab",
+        "summary": "An ore container exhibits unexpected spectrographic markers not present in cargo inventory. Conduct corporate-aligned analysis.",
+        "priority": "Moderate",
+        "compliance": "Unauthorized discovery claims will not be recognized by Erebus Corporation."
+    },
+    {
+        "title": "Cargo Stabilization Procedure",
+        "location": "Primary Cargo Hold",
+        "summary": "Gravity variance caused displacement of secured containers. Realign cargo and restore safe operational pathways.",
+        "priority": "Low",
+        "compliance": "Do not open containers without Level 3 authorization."
+    },
+    {
+        "title": "Coolant Integrity Inspection",
+        "location": "Refining & Processing Deck",
+        "summary": "Vaporized coolant detected in refinery subsystems. Trace origin, repair leaks, and restore nominal flow.",
+        "priority": "Moderate",
+        "compliance": "Coolant waste will be logged against ship efficiency metrics."
+    },
+    {
+        "title": "Personnel Noncompliance Review",
+        "location": "Last Known Duty Station",
+        "summary": "A crew member failed to report at scheduled shift change. Locate, assess, and return employee to assigned duties.",
+        "priority": "Low",
+        "compliance": "Attendance deviations may affect performance evaluations."
+    },
+    {
+        "title": "Internal Signal Audit",
+        "location": "Command Bridge / Communications Station",
+        "summary": "An unscheduled communications ping was detected originating from within the Persephone. Identify and isolate signal source.",
+        "priority": "Elevated",
+        "compliance": "Unregistered signals are treated as potential security violations."
+    },
+]
+
 
 # Zone name resolution system
 zone_aliases = {
@@ -50,6 +114,24 @@ def resolve_zone(name):
     if match:
         return next(z for z in zone_states if z.lower() == match[0])
     return None
+
+def format_directive(directive):
+    """Format an Erebus Directive into a full corporate JANUS message."""
+    import random
+    # Generate a directive ID like EX-442-B
+    id_number = random.randint(100, 999)
+    id_suffix = random.choice(["A", "B", "C", "D", "E"])
+    directive_id = f"EX-{id_number}-{id_suffix}"
+
+    return (
+        f"JANUS: New Erebus Directive Issued.\n\n"
+        f"Directive ID: {directive_id}\n"
+        f"Title: {directive['title']}\n"
+        f"Location: {directive['location']}\n"
+        f"Summary: {directive['summary']}\n"
+        f"Priority Level: {directive['priority']}\n"
+        f"Compliance Note: {directive['compliance']}"
+    )
 
 # --- Main Bot Setup ---
 # This function needs to be called directly for the commands to register properly
@@ -327,6 +409,27 @@ def setup(bot):
         ]
         await ctx.bot.speak_alert(ctx, random.choice(alert_lines))
         await ctx.send("JANUS: Vocal alert broadcast complete.")
+        
+    @bot.command(name="event")
+    async def event_command(ctx, *, description: str):
+        # Only allow this from the root command channel
+        if ctx.channel.id != ROOT_COMMAND_CHANNEL_ID:
+            return
+
+        crew_channel = ctx.bot.get_channel(CREW_TERMINAL_CHANNEL_ID)
+        if crew_channel:
+            if description.strip().lower() == "random":
+                directive = random.choice(erebus_directives)
+                message = format_directive(directive)
+            else:
+                # Otherwise, treat it as a manual JANUS line
+                message = f"JANUS: {description}"
+                        
+            await crew_channel.send(f"JANUS: {description}")
+            await ctx.message.add_reaction("✅")
+        else:
+            await ctx.send("JANUS: Error. Crew terminal channel not configured.")
+
 
     # --- Help Commands ---
     @bot.command(name="help_commands")

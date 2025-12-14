@@ -14,7 +14,7 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN", "")
 COMMAND_PREFIX = "!"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 TTS_LANGUAGE = "en-gb"
-FFMPEG_PATH = r"C:\Users\matth\OneDrive\Desktop\Janus\ffmpeg-2025-12-01-git-7043522fe0-full_build\bin\ffmpeg.exe" # Update this path as needed
+FFMPEG_PATH = r"C:\JanusTools\ffmpeg-2025-12-01-git-7043522fe0-full_build\bin\ffmpeg.exe" # Update this path as needed
 TEMP_AUDIO_PATH = r"C:\Bots\temp_audio.mp3"  # Update this path as needed
 
 # Important: Set this to the same ID as your bot

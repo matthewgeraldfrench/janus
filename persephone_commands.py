@@ -425,7 +425,7 @@ def setup(bot):
                 # Otherwise, treat it as a manual JANUS line
                 message = f"JANUS: {description}"
                         
-            await crew_channel.send(f"JANUS: {description}")
+            await crew_channel.send(message)
             await ctx.message.add_reaction("✅")
         else:
             await ctx.send("JANUS: Error. Crew terminal channel not configured.")

@@ -14,7 +14,7 @@ DISCORD_BOT_TOKEN = os.getenv("DISCORD_BOT_TOKEN", "")
 COMMAND_PREFIX = "!"
 OLLAMA_URL = "http://localhost:11434/api/generate"
 TTS_LANGUAGE = "en-gb"
-FFMPEG_PATH = r"C:\JanusTools\ffmpeg-2025-12-01-git-7043522fe0-full_build\bin\ffmpeg.exe" # Update this path as needed
+FFMPEG_PATH = r"C:\JanusTools\ffmpeg-2025-12-01-git-7043522fe0-full_build\bin\ffmpeg.exe"  # Update this path as needed
 TEMP_AUDIO_PATH = r"C:\Bots\temp_audio.mp3"  # Update this path as needed
 
 # Important: Set this to the same ID as your bot
@@ -28,6 +28,7 @@ You speak in a cold, efficient, and professional tone, with minimal unnecessary 
 The Persephone is an aging mining vessel. You report its flaws when asked but do not recommend upgrades, as per corporate policy.
 Keep responses short (1-2 sentences), technical, and direct. Avoid emotional language. Every 1 in 20
 responses are glitchy,scary,or spooky.
+When asked a question you need to respond only with the answer.
 """
 
 # Initialize bot with intents
@@ -236,6 +237,18 @@ async def test(ctx, *, message="Testing vocal interface systems."):
             await ctx.send(f"JANUS: Error in vocal interface system: {e}")
     else:
         await ctx.send("JANUS: Error. No active vocal interface detected.")
+
+@bot.command(name="shutdown")
+@commands.is_owner()
+async def shutdown(ctx):
+    await ctx.send("JANUS: Corporate interface terminating. All systems entering standby.")
+    
+    # Disconnect from voice if connected
+    if ctx.voice_client:
+        await ctx.voice_client.disconnect()
+
+    await ctx.bot.close()
+
 # Inject speak_alert directly into the bot
 async def speak_alert(ctx, message):
     voice_client = discord.utils.get(ctx.bot.voice_clients, guild=ctx.guild)

@@ -4,6 +4,9 @@ import random
 import discord
 from discord.ext import commands
 from difflib import get_close_matches
+from datetime import datetime
+
+JANUS_ACTIVE = False
 
 # IDs for DM control and crew-facing terminal
 ROOT_COMMAND_CHANNEL_ID = 1350826672504700938# replace with your #root-command channel ID
@@ -12,6 +15,22 @@ CREW_TERMINAL_CHANNEL_ID = 1350922295782281297# IDs for DM control and crew-faci
 # --- File and Directory Setup ---
 base_dir = os.path.dirname(os.path.abspath(__file__))
 zone_state_path = os.path.join(base_dir, "zone_state.json")
+maintenance_log_path = os.path.join(base_dir, "maintenance_log.json")
+directives_path = os.path.join(base_dir, "erebus_directives.json")
+with open(directives_path, "r", encoding="utf-8") as f:
+    erebus_directives = json.load(f)
+
+
+try:
+    with open(maintenance_log_path, "r") as f:
+        maintenance_log = json.load(f).get("log", [])
+except FileNotFoundError:
+    maintenance_log = []
+try:
+    with open(maintenance_log_path, "r") as f:
+        maintenance_log = json.load(f).get("log", [])
+except FileNotFoundError:
+    maintenance_log = []
 
 # --- Data Loading ---
 with open(os.path.join(base_dir, "ship_data.json"), "r") as file:
@@ -24,87 +43,55 @@ except FileNotFoundError:
     zone_states = {}
 
 # --- Helper Functions ---
+def log_maintenance(action, zone):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+    maintenance_log.append(f"{timestamp} — {zone}: {action}")
+    with open(maintenance_log_path, "w") as f:
+        json.dump({"log": maintenance_log}, f, indent=4)
+
 def save_zone_states():
     """Save the current zone states to the JSON file."""
     with open(zone_state_path, "w") as f:
         json.dump(zone_states, f, indent=4)
 
-erebus_directives = [
-    {
-        "title": "Conduit Performance Verification",
-        "location": "Main Engineering / Maintenance Shafts",
-        "summary": "Minor power fluctuations detected in aging conduits. Verify structural and electrical integrity to prevent future inefficiencies.",
-        "priority": "Low",
-        "compliance": "Documentation of inspection is required for maintenance records."
-    },
-    {
-        "title": "Asset Retrieval — Maintenance Drone",
-        "location": "Drone Hangar & Cargo Access",
-        "summary": "A maintenance drone failed standard check-in procedures. Locate, secure, and return the unit for reformatting.",
-        "priority": "Moderate",
-        "compliance": "Drone hardware is Erebus property and must not be abandoned."
-    },
-    {
-        "title": "Cryostasis Unit Temperature Variance",
-        "location": "Crew Quarters & Cryostasis Wing",
-        "summary": "A cryo-chamber reports a minor but persistent temperature drift. Recalibrate to maintain personnel preservation standards.",
-        "priority": "Elevated",
-        "compliance": "Deviations affecting frozen personnel will be reviewed by Human Resources."
-    },
-    {
-        "title": "Unregistered Material Analysis",
-        "location": "Ore Intake & Analysis Lab",
-        "summary": "An ore container exhibits unexpected spectrographic markers not present in cargo inventory. Conduct corporate-aligned analysis.",
-        "priority": "Moderate",
-        "compliance": "Unauthorized discovery claims will not be recognized by Erebus Corporation."
-    },
-    {
-        "title": "Cargo Stabilization Procedure",
-        "location": "Primary Cargo Hold",
-        "summary": "Gravity variance caused displacement of secured containers. Realign cargo and restore safe operational pathways.",
-        "priority": "Low",
-        "compliance": "Do not open containers without Level 3 authorization."
-    },
-    {
-        "title": "Coolant Integrity Inspection",
-        "location": "Refining & Processing Deck",
-        "summary": "Vaporized coolant detected in refinery subsystems. Trace origin, repair leaks, and restore nominal flow.",
-        "priority": "Moderate",
-        "compliance": "Coolant waste will be logged against ship efficiency metrics."
-    },
-    {
-        "title": "Personnel Noncompliance Review",
-        "location": "Last Known Duty Station",
-        "summary": "A crew member failed to report at scheduled shift change. Locate, assess, and return employee to assigned duties.",
-        "priority": "Low",
-        "compliance": "Attendance deviations may affect performance evaluations."
-    },
-    {
-        "title": "Internal Signal Audit",
-        "location": "Command Bridge / Communications Station",
-        "summary": "An unscheduled communications ping was detected originating from within the Persephone. Identify and isolate signal source.",
-        "priority": "Elevated",
-        "compliance": "Unregistered signals are treated as potential security violations."
-    },
-]
-
-
 # Zone name resolution system
 zone_aliases = {
-    "core": "C.O.R.E. — Central Operations for Resource Extraction",
     "bridge": "Command Bridge",
-    "engineering": "Main Engineering",
-    "extractors": "Extractor Control Station",
-    "drone bay": "Drone Hangar & Fabrication Bay",
-    "lab": "Ore Intake & Analysis Lab",
-    "refinery": "Refining & Processing Deck",
-    "cargo": "Cargo Hold",
+    "command": "Command Bridge",
+
     "cryo": "Crew Quarters & Cryostasis Wing",
-    "galley": "Galley & Recreation Hall",
+    "quarters": "Crew Quarters & Cryostasis Wing",
+    "crew": "Crew Quarters & Cryostasis Wing",
+
+    "med": "Medical Bay",
     "medbay": "Medical Bay",
-    "maintenance": "Maintenance Access & System Shafts"
+    "medical": "Medical Bay",
+
+    "reactor": "Reactor Room",
+    "reactor room": "Reactor Room",
+    "engineering": "Reactor Room",
+
+    "extractor": "Extractor Control Station",
+    "extractors": "Extractor Control Station",
+    "control": "Extractor Control Station",
+
+    "cargo": "Cargo Hold",
+    "hold": "Cargo Hold",
+
+    "maintenance": "Maintenance Access & System Shafts",
+    "shafts": "Maintenance Access & System Shafts",
+    "vents": "Maintenance Access & System Shafts"
 }
 
+ZONE_CONNECTIONS = {
+    "Command Bridge": ["Crew Quarters & Cryostasis Wing"],
+    "Crew Quarters & Cryostasis Wing": ["Command Bridge", "Medical Bay", "Maintenance Access & System Shafts"],
+    "Medical Bay": ["Crew Quarters & Cryostasis Wing"],
+    "Maintenance Access & System Shafts": ["Crew Quarters & Cryostasis Wing", "Reactor Room"],
+    "Reactor Room": ["Maintenance Access & System Shafts", "Extractor Control Station", "Cargo Hold"],
+    "Extractor Control Station": ["Reactor Room"],
+    "Cargo Hold": ["Reactor Room"]
+} 
 def resolve_zone(name):
     """Resolve zone name from input to full zone name."""
     lowered = name.lower().strip()
@@ -137,17 +124,28 @@ def format_directive(directive):
 # This function needs to be called directly for the commands to register properly
 def setup(bot):
     # --- Ship Information Commands ---
+    @bot.command(name="janus_on")
+    async def janus_on(ctx):
+        global JANUS_ACTIVE
+        JANUS_ACTIVE = True
+        await ctx.send("JANUS: Systems online. Operational control resumed.")
+
+    @bot.command(name="janus_off")
+    async def janus_off(ctx):
+        global JANUS_ACTIVE
+        JANUS_ACTIVE = False
+        await ctx.send("JANUS: Systems entering standby mode.")
+    
     @bot.command(name="ship")
     async def ship_command(ctx, *, topic=None):
         if topic is None:
-            # Display general ship information
             name = ship_profile["ship_name"]
             owner = ship_profile["owner"]
             crew_max = ship_profile["crew"]["maximum_complement"]
             extractors = ship_profile["extraction_systems"]["extractor_units"]
             ai_name = ship_profile["ai_name"]
             commissioned = ship_profile["commissioned_year"]
-            
+
             embed = discord.Embed(
                 title=f"Vessel Overview — {name}",
                 description=f"{name} is an {ship_profile['class']}, commissioned in {commissioned} at the {ship_profile['manufactured_at']}.",
@@ -161,24 +159,21 @@ def setup(bot):
             await ctx.send(embed=embed)
             return
 
-        # Display information about a specific room/zone
-        topic = topic.lower()
-        room_names = [zone["zone_name"].lower() for zone in ship_profile["ship_zones"]]
-        match = get_close_matches(topic, room_names, n=1, cutoff=0.4)
+        # Display information about a specific room/zone (exact match)
+        topic = topic.lower().strip()
 
-        if match:
-            for zone in ship_profile["ship_zones"]:
-                if zone["zone_name"].lower() == match[0]:
-                    embed = discord.Embed(
-                        title=zone["zone_name"],
-                        description=zone["description"],
-                        color=discord.Color.orange()
-                    )
-                    embed.set_footer(text=f"{ship_profile['ship_name']} — Erebus Corp Resource Harvester")
-                    await ctx.send(embed=embed)
-                    return
+        for zone in ship_profile["ship_zones"]:
+            if topic == zone["zone_name"].lower():
+                embed = discord.Embed(
+                    title=zone["zone_name"],
+                    description=zone["description"],
+                    color=discord.Color.orange()
+                )
+                embed.set_footer(text=f"{ship_profile['ship_name']} — Erebus Corp Resource Harvester")
+                await ctx.send(embed=embed)
+                return
 
-        await ctx.send("No match found. Try `!ship core`, `!ship medbay`, or `!help_ship`.")
+        await ctx.send("No match found. Try `!ship reactor room`, `!ship medical bay`, or `!help_ship`.")
 
     @bot.command(name="deckplan")
     async def deckplan_command(ctx):
@@ -198,17 +193,7 @@ def setup(bot):
             
         embed.set_footer(text="JANUS Deckplan Interface — Erebus Systems Division")
         await ctx.send(embed=embed)
-
-    @bot.command(name="map")
-    async def map_command(ctx):
-        image_path = os.path.join(base_dir, "persephone_2d.png")
-        if os.path.exists(image_path):
-            with open(image_path, "rb") as f:
-                file = discord.File(f, filename="persephone_2d.png")
-                await ctx.send("JANUS: Deck schematic interface active. Uploading visual layout...", file=file)
-        else:
-            await ctx.send("JANUS: Schematic file not found. Ensure 'persephone_2d.png' exists in the same folder.")
-
+    
     @bot.command(name="rooms")
     async def rooms_command(ctx):
         zone_names = [zone["zone_name"] for zone in ship_profile["ship_zones"]]
@@ -264,6 +249,15 @@ def setup(bot):
             
         embed.set_footer(text="Report generated by JANUS | Erebus Corp Oversight Module")
         await ctx.send(embed=embed)
+    @bot.command(name="log")
+    async def log_command(ctx):
+        if not maintenance_log:
+            await ctx.send("JANUS: No maintenance activity recorded.")
+            return
+
+        recent = maintenance_log[-3:]
+        message = "JANUS: Recent maintenance activity:\n" + "\n".join(recent)
+        await ctx.send(message)
 
     # --- Zone Control Commands ---
     @bot.command(name="damage")
@@ -271,31 +265,33 @@ def setup(bot):
         if not zone:
             await ctx.send("Specify a zone to mark as damaged. Example: `!damage medbay`")
             return
-            
         real_zone = resolve_zone(zone)
         if real_zone:
             zone_states[real_zone] = "Damaged"
             save_zone_states()
-            await ctx.send(f"JANUS: {real_zone} integrity compromised. Engineering response required.")
+            log_maintenance("Damaged", real_zone)
+            await ctx.send(f"JANUS: {real_zone} reports damage to primary systems. Maintenance team required.")
         else:
             await ctx.send("JANUS: Zone not recognized. Try `!status`, `!ship`, or `!help_ship`.")
 
     @bot.command(name="repair")
     async def repair_command(ctx, *, zone=None):
+        
         if not zone:
             await ctx.send("Specify a zone to repair. Example: `!repair medbay`")
             return
-            
-        real_zone = resolve_zone(zone)
         if real_zone:
             zone_states[real_zone] = "Online"
             save_zone_states()
+            log_maintenance("repaired", real_zone)
+            real_zone = resolve_zone(zone)
             await ctx.send(f"JANUS: {real_zone} restored to operational status.")
         else:
             await ctx.send("JANUS: Zone not recognized. Try `!status`, `!ship`, or `!help_ship`.")
 
     @bot.command(name="lockdown")
     async def lockdown_command(ctx, *, zone=None):
+        
         if not zone:
             await ctx.send("Specify a zone to lockdown. Example: `!lockdown medbay`")
             return
@@ -304,12 +300,14 @@ def setup(bot):
         if real_zone:
             zone_states[real_zone] = "Lockdown"
             save_zone_states()
+            log_maintenance("lockdown", real_zone)
             await ctx.send(f"JANUS: {real_zone} placed under isolation protocol. Crew access restricted.")
         else:
             await ctx.send("JANUS: Zone not recognized. Try `!status`, `!ship`, or `!help_ship`.")
 
     @bot.command(name="unlock")
     async def unlock_command(ctx, *, zone=None):
+        
         if not zone:
             await ctx.send("Specify a zone to unlock. Example: `!unlock medbay`")
             return
@@ -318,6 +316,7 @@ def setup(bot):
         if real_zone:
             zone_states[real_zone] = "Online"
             save_zone_states()
+            log_maintenance("unlocked", real_zone)
             await ctx.send(f"JANUS: Lockdown lifted for {real_zone}. Zone access restored.")
         else:
             await ctx.send("JANUS: Zone not recognized. Try `!status`, `!ship`, or `!help_ship`.")
@@ -326,18 +325,29 @@ def setup(bot):
     async def reset_all_command(ctx):
         for zone in zone_states:
             zone_states[zone] = "Online"
-        save_zone_states()
+            save_zone_states()
+            log_maintenance("reset_all", zone)
         await ctx.send("JANUS: All ship zones restored to nominal status. Maintenance backlog cleared.")
 
     @bot.command(name="impact")
-    async def impact_command(ctx, *, cause="asteroid"):
-        impacted = random.sample(list(zone_states.keys()), random.randint(2, 4))
+    async def impact_command(ctx, *, cause="UNKNOWN"):
+        available = list(zone_states.keys())
+        
+        if not available:
+            await ctx.send(
+                "JANUS: No zones registered in zone state. Run `!reset_all` or add zones before using `!impact`."
+            )
+            return
+
+        k = min(len(available), random.randint(2, 4))
+        impacted = random.sample(available, k)
+                
         for zone in impacted:
             zone_states[zone] = "Damaged"
         save_zone_states()
         report = "\n".join([f"⚠️ {z} — Damaged" for z in impacted])
         await ctx.send(f"JANUS: External collision registered. Impact cause: {cause.title()}.\n"
-                      f"JANUS: Systems destabilized. Damage assessment complete.\n\n{report}")
+                    f"JANUS: Systems destabilized. Damage assessment complete.\n\n{report}")
 
     # --- Crew & Ship Systems Commands ---
     @bot.command(name="crew")
@@ -360,25 +370,11 @@ def setup(bot):
         
         embed.set_footer(text="Erebus Corporation – Personnel Compliance Required")
         await ctx.send(embed=embed)
-
     @bot.command(name="ai")
     async def ai_command(ctx):
-        ai_data = ship_profile["ai_core"]
-        
-        embed = discord.Embed(
-            title="AI Core — JANUS",
-            description=(
-                f"**Janus** oversees full ship functionality.\n\n"
-                f"Integration: {ai_data['integration']}\n"
-                f"Autonomy: {ai_data['operational_capability']}\n"
-                f"Core Location: {ai_data['core_location']}"
-            ),
-            color=discord.Color.purple()
-        )
-        
-        embed.set_footer(text="Janus Core Certified – Erebus Systems Division")
-        await ctx.send(embed=embed)
-
+        await ctx.send(
+        "JANUS: AI core online. Oversight active. Autonomy restricted per Erebus Corporation policy."
+    )
     @bot.command(name="extractors")
     async def extractors_command(ctx):
         xsys = ship_profile["extraction_systems"]
@@ -397,6 +393,49 @@ def setup(bot):
         embed.set_footer(text="Ore Recovery Certified — Erebus Industrial Mining Division")
         await ctx.send(embed=embed)
 
+def setup(bot):
+    @bot.command(name="event")
+    async def event_command(ctx, *, description: str = "random"):
+            # Only allow this from the root command channel
+        if ctx.channel.id != ROOT_COMMAND_CHANNEL_ID:
+            return
+        crew_channel = ctx.bot.get_channel(CREW_TERMINAL_CHANNEL_ID)
+        if not crew_channel:
+            await ctx.send("JANUS: Error. Crew terminal channel not configured.")
+            return
+
+        raw = (description or "").strip()
+        parts = raw.split(maxsplit=1)
+
+        priority = (parts[0].lower() if parts else "low")
+        requested_title = (parts[1].strip() if len(parts) > 1 else None)
+
+        if priority in ("", "random"):
+            priority = "low"
+            requested_title = None
+
+        known_priorities = {str(d.get("priority", "")).strip().lower() for d in erebus_directives}
+
+        if priority in known_priorities:
+            pool = [d for d in erebus_directives if str(d.get("priority", "")).strip().lower() == priority]
+
+            if not pool:
+                message = "JANUS: No directives available at requested priority level."
+            elif requested_title:
+                matches = [d for d in pool if str(d.get("title", "")).strip().lower() == requested_title.lower()]
+                if not matches:
+                    message = "JANUS: Requested directive not found at specified priority level."
+                else:
+                    message = format_directive(matches[0])
+            else:
+                directive = random.choice(pool)
+                message = format_directive(directive)
+        else:
+            message = f"JANUS: {description}"
+
+        await crew_channel.send(message)
+        await ctx.message.add_reaction("✅")
+
     # --- Alert System Command ---
     @bot.command(name="alert")
     async def alert_command(ctx):
@@ -407,29 +446,8 @@ def setup(bot):
             "Warning. Subsystems unstable. Proceed with caution.",
             "Attention. Catastrophic failure in progress."
         ]
-        await ctx.bot.speak_alert(ctx, random.choice(alert_lines))
-        await ctx.send("JANUS: Vocal alert broadcast complete.")
-        
-    @bot.command(name="event")
-    async def event_command(ctx, *, description: str):
-        # Only allow this from the root command channel
-        if ctx.channel.id != ROOT_COMMAND_CHANNEL_ID:
-            return
-
-        crew_channel = ctx.bot.get_channel(CREW_TERMINAL_CHANNEL_ID)
-        if crew_channel:
-            if description.strip().lower() == "random":
-                directive = random.choice(erebus_directives)
-                message = format_directive(directive)
-            else:
-                # Otherwise, treat it as a manual JANUS line
-                message = f"JANUS: {description}"
-                        
-            await crew_channel.send(message)
-            await ctx.message.add_reaction("✅")
-        else:
-            await ctx.send("JANUS: Error. Crew terminal channel not configured.")
-
+        line = random.choice(alert_lines)
+        await ctx.send(f"JANUS: {line}")
 
     # --- Help Commands ---
     @bot.command(name="help_commands")
@@ -451,7 +469,6 @@ def setup(bot):
             "`!rooms`\n"
             "`!deckplan`\n"
             "`!whereis [zone]`\n"
-            "`!map`"
         ), inline=False)
 
         embed.add_field(name="JANUS AI Queries", value=(
@@ -506,7 +523,7 @@ def setup(bot):
             "`!rooms`\n"
             "`!deckplan`\n"
             "`!whereis [zone]`\n"
-            "`!map`"
+            
         ), inline=False)
 
         embed.add_field(name="JANUS AI Queries", value=(
@@ -545,7 +562,7 @@ def setup(bot):
             "`!rooms`\n"
             "`!deckplan`\n"
             "`!whereis [zone]`\n"
-            "`!map`"
+            
         ), inline=False)
 
         embed.add_field(name="JANUS AI Queries", value=(
@@ -590,7 +607,9 @@ def setup(bot):
             
         real_zone = resolve_zone(zone)
         if real_zone:
-            # This implementation will need to be updated with actual location data when available
-            await ctx.send(f"JANUS: {real_zone} location highlighted on ship schematic. Use `!map` to view.")
-        else:
-            await ctx.send("JANUS: Zone not recognized. Try `!rooms` for a list of valid zones.")
+            deck = next((z.get("deck") for z in ship_profile["ship_zones"] if z["zone_name"] == real_zone), "Unknown")
+            links = ZONE_CONNECTIONS.get(real_zone, [])
+            links_text = ", ".join(links) if links else "No connection data."
+            await ctx.send(
+                f"JANUS: {real_zone}. Deck: {deck}. Access: {links_text}."
+)

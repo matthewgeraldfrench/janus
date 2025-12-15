@@ -1,11 +1,11 @@
 {
-  "ship_name": "Persephone",
-  "owner": "Erebus Corporation",
-  "class": "Resource Harvester",
-  "manufactured_at": "Luna Shipyards",
-  "commissioned_year": 2149,
-  "ai_name": "JANUS",
-
+    "ship_name": "Persephone",
+    "owner": "Erebus Corporation",
+    "class": "Resource Harvester",
+    "manufactured_at": "Luna Shipyards",
+    "commissioned_year": 2149,
+    "ai_name": "JANUS",
+  
   "crew": {
     "maximum_complement": 30,
     "minimum_operational_crew": 12,
@@ -16,10 +16,9 @@
         "rest_hours": 16,
         "monthly_extended_rest": "2 days"
       },
-      "off_duty_procedure": "Report to cryostasis or quarters."
+      "off_duty_procedure": "Report to cryostasis or crew quarters."
     }
   },
-
   "extraction_systems": {
     "extractor_units": 4,
     "technology": "Plasma Bore",
@@ -28,18 +27,134 @@
   },
 
   "ship_zones": [
-    {
-      "zone_name": "Command Bridge",
-      "description": "Primary command and navigation center."
+    { "zone_name": "Command Bridge", 
+      "deck": "Deck 1",
+      "description": "Primary command and navigation center." 
     },
-    {
-      "zone_name": "Main Engineering",
-      "description": "Reactor, generators, and power systems."
-    }
+    { "zone_name": "Communications", 
+      "deck": "Deck 1",  
+      "description": "Long-range comms, passive sensors, and telemetry routing." 
+    },
+    { "zone_name": "Operations Center", 
+      "deck": "Deck 1",
+      "description": "Mission control, extraction scheduling, and corporate uplink terminal." 
+      },
+    { "zone_name": "Crew Quarters", 
+      "deck": "Deck 2",
+      "description": "Bunks, lockers, and basic personal storage." 
+    },
+    { "zone_name": "Mess Hall", 
+      "deck": "Deck 2",
+      "description": "Food prep, ration storage, and communal seating." 
+      },
+    { "zone_name": "Medical Bay", 
+      "deck": "Deck 2",
+      "description": "Trauma care, med storage, and quarantine protocols." 
+      },
+    { "zone_name": "Cryo Wing", 
+      "deck": "Deck 2",
+      "description": "Cryostasis pods and maintenance access for rotation protocol." 
+    },
+    { "zone_name": "Main Engineering", 
+    "deck": "Deck 3",
+    "description": "Reactor, generators, and ship-wide power distribution." 
+    },
+    { "zone_name": "Reactor Room", 
+      "deck": "Deck 3",
+      "description": "Primary reactor housing and shielding." 
+    },
+    { "zone_name": "Life Support", 
+      "deck": "Deck 3",
+      "description": "Atmosphere processing, water reclamation, and scrubbers." 
+    },
+    { "zone_name": "Maintenance Access",
+      "deck": "Deck 3",
+      "description": "Crawlways, conduits, and service hatches." 
+    },
+    { "zone_name": "Extractor Control", 
+      "deck": "Deck 4",
+      "description": "Control room for extractor units and bore alignment." 
+    },
+    { "zone_name": "Ore Intake and Processing", 
+      "deck": "Deck 4",
+      "description": "Ore receiving, crushing, sorting, and initial refinement." 
+    },
+    { "zone_name": "Cargo Hold", 
+      "deck": "Deck 4",
+      "description": "Secured bulk storage for ore and equipment." 
+    },
+    { "zone_name": "Drone Bay", 
+      "deck": "Deck 4",
+      "description": "Repair and staging for external work drones and survey units." 
+    },
+    { "zone_name": "Airlock", 
+      "deck": "Deck 3",
+      "description": "Suit storage, tool racks, and primary airlock operations." }
   ],
 
   "deckplan": {
-    "Deck 1": ["Command Bridge", "Cryo Wing"],
-    "Deck 2": ["Main Engineering", "Extractor Control"]
-  }
+    "Deck 1": ["Command Bridge", "Communications", "Operations Center"],
+    "Deck 2": ["Crew Quarters", "Mess Hall", "Medical Bay", "Cryo Wing"],
+    "Deck 3": ["Main Engineering", "Reactor Room", "Life Support", "Maintenance Access"],
+    "Deck 4": ["Extractor Control", "Ore Intake and Processing", "Cargo Hold", "Drone Bay", "Airlock"]
+  },
+    
+  "schematic": {
+  "orientation": {
+    "fore": "Command Bridge",
+    "aft": "Cargo Hold",
+    "notes": "Layout represents functional relationships, not scale."
+  },
+  
+  "zones": {
+    "Command Bridge": {
+      "deck": "Deck 1",
+      "connects_to": [
+        "Crew Quarters & Cryostasis Wing"
+      ]
+    },
+    "Crew Quarters & Cryostasis Wing": {
+      "deck": "Deck 1",
+      "connects_to": [
+        "Command Bridge",
+        "Medical Bay",
+        "Maintenance Access & System Shafts"
+      ]
+    },
+    "Medical Bay": {
+      "deck": "Deck 1",
+      "connects_to": [
+        "Crew Quarters & Cryostasis Wing"
+      ]
+    },
+    "Maintenance Access & System Shafts": {
+      "deck": "Interdeck",
+      "connects_to": [
+        "Crew Quarters & Cryostasis Wing",
+        "Reactor Room"
+      ]
+    },
+    "Reactor Room": {
+      "deck": "Deck 2",
+      "connects_to": [
+        "Maintenance Access & System Shafts",
+        "Extractor Control Station",
+        "Cargo Hold"
+      ]
+    },
+    "Extractor Control Station": {
+      "deck": "Deck 2",
+      "connects_to": [
+        "Reactor Room"
+      ]
+    },
+    "Cargo Hold": {
+      "deck": "Interdeck",
+      "connects_to": [
+        "Reactor Room"
+      ]
+    }
+  }}
 }
+
+

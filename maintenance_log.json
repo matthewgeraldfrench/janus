@@ -1,0 +1,11 @@
+{
+    "log": [
+        "2025-12-14 14:52 \u2014 Medical Bay: Damaged",
+        "2025-12-14 15:00 \u2014 Medical Bay: Damaged",
+        "2025-12-14 15:09 \u2014 Reactor Room: Damaged",
+        "2025-12-14 15:38 \u2014 Medical Bay: Damaged",
+        "2025-12-14 15:59 \u2014 Medical Bay: reset_all",
+        "2025-12-14 15:59 \u2014 Reactor Room: reset_all",
+        "2025-12-14 16:00 \u2014 Medical Bay: lockdown"
+    ]
+}

@@ -1,0 +1,301 @@
+[
+{
+    "title": "Conduit Load Irregularity",
+    "location": "Main Engineering",
+    "summary": "Power distribution telemetry indicates uneven load balancing across parallel conduit paths.",
+    "priority": "Low",
+    "compliance": "Record inspection results in the official maintenance log."
+},
+{
+    "title": "Drone Inventory Desync",
+    "location": "Drone Bay",
+    "summary": "Automated inventory counts differ from physical docking confirmations by one unit.",
+    "priority": "Low",
+    "compliance": "Reconcile inventory and return all assets to registered slots."
+},
+{
+    "title": "Cryostasis Sensor Drift",
+    "location": "Cryo Wing",
+    "summary": "Cryostasis temperature sensors report gradual calibration drift within acceptable variance.",
+    "priority": "Low",
+    "compliance": "Confirm calibration and submit results to system logs."
+},
+{
+    "title": "Ore Classification Mismatch",
+    "location": "Ore Intake and Processing",
+    "summary": "Material analysis outputs do not align with current classification tables for known resources.",
+    "priority": "Low",
+    "compliance": "Route analysis results through approved corporate channels."
+},
+{
+    "title": "Cargo Mass Offset",
+    "location": "Cargo Hold",
+    "summary": "Mass sensors indicate minor distribution imbalance relative to recorded stowage profiles.",
+    "priority": "Low",
+    "compliance": "Maintain container configuration unless authorized otherwise."
+},
+{
+    "title": "Coolant Phase Variance",
+    "location": "Ore Intake and Processing",
+    "summary": "Coolant telemetry registers intermittent phase changes during standard operating cycles.",
+    "priority": "Low",
+    "compliance": "Account for coolant variance against efficiency metrics."
+},
+{
+    "title": "Crew Roster Index Error",
+    "location": "Operations Center",
+    "summary": "Personnel management software flags inconsistent indexing within active crew schedules.",
+    "priority": "Low",
+    "compliance": "Update roster records and confirm index integrity."
+},
+{
+    "title": "Internal Signal Routing Conflict",
+    "location": "Communications",
+    "summary": "Signal routing logs show redundant internal paths selected during routine transmission.",
+    "priority": "Low",
+    "compliance": "Flag routing conflict and preserve transmission records."
+},
+{
+    "title": "Maintenance Timestamp Desynchronization",
+    "location": "Maintenance Access",
+    "summary": "Subsystem maintenance logs report non-sequential timestamp entries across recent cycles.",
+    "priority": "Low",
+    "compliance": "Resynchronize clocks and document correction."
+},
+{
+    "title": "Thermal Insulation Degradation",
+    "location": "Crew Quarters",
+    "summary": "Thermal sensors indicate uneven heat retention consistent with aging insulation panels.",
+    "priority": "Low",
+    "compliance": "Document degradation and maintain current habitation parameters."
+},
+{
+    "title": "Medical Database Fragmentation",
+    "location": "Medical Bay",
+    "summary": "Medical records storage reports fragmented archival blocks during routine integrity checks.",
+    "priority": "Low",
+    "compliance": "Initiate database consolidation and verify checksum integrity."
+},
+{
+    "title": "Extractor Control Input Latency",
+    "location": "Extractor Control",
+    "summary": "Control interface registers delayed acknowledgment between command input and system response.",
+    "priority": "Low",
+    "compliance": "Confirm control responsiveness and clear input buffers."
+},
+{
+    "title": "Atmospheric Sensor Redundancy Conflict",
+    "location": "Life Support",
+    "summary": "Primary and secondary atmospheric sensors report conflicting readings within tolerance margins.",
+    "priority": "Low",
+    "compliance": "Designate authoritative sensor set and document override."
+},
+{
+    "title": "Airlock Seal Wear Indicator",
+    "location": "Airlock",
+    "summary": "Seal integrity monitors report increased material fatigue during routine pressure cycling.",
+    "priority": "Low",
+    "compliance": "Log wear indicators and maintain standard access protocols."
+},
+{
+    "title": "Reactor Shielding Diagnostic Noise",
+    "location": "Reactor Room",
+    "summary": "Radiation sensors detect elevated background noise during shielding self-diagnostics.",
+    "priority": "Low",
+    "compliance": "Record diagnostic output and continue monitoring."
+},
+{
+    "title": "Navigation Reference Drift",
+    "location": "Command Bridge",
+    "summary": "Astrogation reference data shows minor drift relative to stored stellar baseline models.",
+    "priority": "Low",
+    "compliance": "Update reference alignment and archive prior data set."
+},
+{
+    "title": "Mess Hall Supply Tracker Error",
+    "location": "Mess Hall",
+    "summary": "Automated ration tracking reports count discrepancies across multiple supply categories.",
+    "priority": "Low",
+    "compliance": "Reconcile supply counts and update inventory records."
+},
+{
+    "title": "Residual Biosignature Detection",
+    "location": "Maintenance Access",
+    "summary": "Passive biosensors register a low-strength biological signature trace inconsistent with any active crew profile.",
+    "priority": "Low",
+    "compliance": "Log anomaly and continue routine monitoring."
+},
+{    "title": "Reactor Output Instability",
+    "location": "Reactor Room",
+    "summary": "Reactor power regulators exhibit underdamped oscillation during sustained load, producing cyclic deviation around the nominal setpoint.",
+    "priority": "Moderate",
+    "compliance": "Stabilize output variance and document corrective action in the maintenance log."
+},
+{
+    "title": "Life Support Scrubber Certification Lapse",
+    "location": "Life Support",
+    "summary": "CO₂ scrubber cartridges fail algorithmic lifecycle validation despite acceptable gas exchange performance.",
+    "priority": "Moderate",
+    "compliance": "Re-certify scrubber assemblies and update system logs."
+},
+{
+    "title": "Cryo Wing Access Seal Fault",
+    "location": "Cryo Wing",
+    "summary": "Helium leak-rate testing identifies repeated micro-permeation events during pressure equalization cycles.",
+    "priority": "Moderate",
+    "compliance": "Restore seal integrity and certify compartment pressure stability in system logs."
+},
+{
+    "title": "Ore Intake Conveyor Torque Spike",
+    "location": "Ore Intake and Processing",
+    "summary": "Drive motors record transient torsional stress exceeding modeled friction coefficients for current material composition.",
+    "priority": "Moderate",
+    "compliance": "Inspect drive assemblies and return torque behavior to nominal range."
+},
+{
+    "title": "Extractor Alignment Drift",
+    "location": "Extractor Control",
+    "summary": "Bore guidance sensors report cumulative angular deviation relative to inertial reference calibration.",
+    "priority": "Moderate",
+    "compliance": "Recalibrate alignment controls and log updated reference values."
+},
+{
+    "title": "Cargo Hold Restraint Margin Reduction",
+    "location": "Cargo Hold",
+    "summary": "Load restraint tension models indicate reduced safety margin under simulated thrust and rotation profiles.",
+    "priority": "Moderate",
+    "compliance": "Re-secure affected cargo and certify restraint margins in the maintenance log."
+},
+{
+    "title": "Drone Bay Diagnostic Loop",
+    "location": "Drone Bay",
+    "summary": "Autonomous service cradle remains trapped in validation state due to failed convergence of diagnostic checks.",
+    "priority": "Moderate",
+    "compliance": "Clear fault state and restore cradle readiness status."
+},
+{
+    "title": "Operations Schedule Conflict",
+    "location": "Operations Center",
+    "summary": "Task allocation software produces non-resolvable overlap between mission-critical duty blocks within a single shift.",
+    "priority": "Moderate",
+    "compliance": "Resolve schedule conflicts and publish the corrected roster to system logs."
+},
+{
+    "title": "Communications Buffer Saturation",
+    "location": "Communications",
+    "summary": "Packet queues sustain backpressure conditions as internal message throughput exceeds negotiated handling capacity.",
+    "priority": "Moderate",
+    "compliance": "Purge nonessential queues and verify nominal routing throughput."
+},
+{
+    "title": "Maintenance Access Power Draw Anomaly",
+    "location": "Maintenance Access",
+    "summary": "Distributed current sensors measure persistent parasitic load inconsistent with dormant subsystem states.",
+    "priority": "Moderate",
+    "compliance": "Isolate the draw source and record corrective action in the maintenance log."
+},
+{
+    "title": "Reactor Cooling Flow Degradation",
+    "location": "Reactor Room",
+    "summary": "Primary coolant loop flow rate falls below minimum thermal stability threshold under sustained power output.",
+    "priority": "High",
+    "exposure": "Personnel",
+    "advisory": "Protective equipment required.",
+    "compliance": "Reduce reactor load and restore coolant circulation to certified operating levels."
+},
+{
+    "title": "Life Support Partial Pressure Instability",
+    "location": "Life Support",
+    "summary": "Cabin atmospheric composition drifts outside modeled partial pressure balance during normal metabolic load.",
+    "priority": "High",
+    "exposure": "Personnel",
+    "advisory": "Protective equipment required.",
+    "compliance": "Stabilize atmospheric mix and verify life support regulation integrity."
+},
+{
+    "title": "Extractor Structural Resonance",
+    "location": "Extractor Control",
+    "summary": "Harmonic vibration analysis identifies resonance coupling between bore assembly and ship superstructure.",
+    "priority": "High",
+    "exposure": "Asset",
+    "advisory": "Extraction operations restricted.",
+    "compliance": "Dampen resonance conditions and restore structural stability parameters."
+},
+{
+    "title": "Cargo Hold Load Shift",
+    "location": "Cargo Hold",
+    "summary": "Inertial monitoring detects active mass displacement exceeding restraint compensation limits.",
+    "priority": "High",
+    "exposure": "Asset",
+    "advisory": "Tethering and safety procedures required.",
+    "compliance": "Secure cargo distribution and confirm structural load compliance."
+},
+{
+    "title": "Communications Antenna Misalignment",
+    "location": "Communications",
+    "summary": "Antenna pointing solutions diverge from inertial reference frame beyond correction tolerance.",
+    "priority": "High",
+    "exposure": "External",
+    "advisory": "Vac suits mandatory.",
+    "compliance": "Realign antenna arrays and reestablish stable communication geometry."
+},
+{
+    "title": "Power Bus Isolation Failure",
+    "location": "Main Engineering",
+    "summary": "Electrical bus segmentation fails to isolate transient faults during load redistribution.",
+    "priority": "High",
+    "exposure": "Asset",
+    "advisory": "Electrical hazard protocols in effect.",
+    "compliance": "Isolate affected power buses and restore fault containment capability."
+},
+
+{
+    "title": "Hull Integrity Breach",
+    "location": "Multiple Compartments",
+    "summary": "Pressure sensors register rapid loss inconsistent with controlled venting or airlock cycling.",
+    "priority": "Critical",
+    "exposure": "Environmental",
+    "advisory": "Environmental safety not assured. Vac suits mandatory.",
+    "compliance": "Isolate breached compartments and restore pressure containment immediately."
+},
+{
+    "title": "Reactor Containment Failure",
+    "location": "Reactor Room",
+    "summary": "Containment field stability drops below minimum tolerances during active operation.",
+    "priority": "Critical",
+    "exposure": "Personnel",
+    "advisory": "Radiation hazard present. Vac suits mandatory. Access restricted.",
+    "compliance": "Scram reactor and restore containment integrity."
+},
+{
+    "title": "Life Support Cascade Failure",
+    "location": "Life Support",
+    "summary": "Atmospheric regulation systems fail to converge on stable composition across inhabited zones.",
+    "priority": "Critical",
+    "exposure": "Environmental",
+    "advisory": "Environmental safety not assured. Vac suits mandatory.",
+    "compliance": "Stabilize atmosphere or initiate controlled compartment isolation."
+},
+{
+    "title": "Primary Power Grid Collapse",
+    "location": "Main Engineering",
+    "summary": "Power distribution enters uncontrolled load shedding with repeated system resets.",
+    "priority": "Critical",
+    "exposure": "Asset",
+    "advisory": "System stability compromised. Nonessential access prohibited.",
+    "compliance": "Restore controlled power distribution or initiate emergency power protocols."
+},
+{
+    "title": "Thermal Radiator Failure",
+    "location": "External Hull Surfaces",
+    "summary": "Heat rejection capacity drops below minimum thresholds required for sustained operation.",
+    "priority": "Critical",
+    "exposure": "External",
+    "advisory": "Vac suits mandatory.",
+    "compliance": "Restore thermal dissipation capability or initiate emergency shutdown procedures."
+}
+]
+
+
+
+
